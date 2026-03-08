@@ -9,6 +9,7 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'content',
+        'sentiment_score',
     ];
 
 

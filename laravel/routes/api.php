@@ -42,3 +42,5 @@ Route::middleware('auth:sanctum')->group(function(){
     // いいね削除追加
     Route::post('/posts/{post}/like', [LikeController::class,'toggle']);
 });
+
+Route::get('/python-test', [App\Http\Controllers\PythonTestController::class, 'test']);

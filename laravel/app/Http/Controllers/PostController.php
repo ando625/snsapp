@@ -49,10 +49,23 @@ class PostController extends Controller
 
     public function postStore(PostRequest $request)
     {
+        $content = $request->content;
+        $scriptPath = base_path('python/sentiment.py');
+
+        // 余計なエラー出力を混ぜないようにシンプルに呼び出す
+        $command = "python3 $scriptPath " . escapeshellarg($content);
+        $output = shell_exec($command);
+
+        // 改行や空白でバラバラにして、最初の数字だけを取り出す
+        $parts = preg_split('/\s+/', trim($output));
+        $scoreRaw = $parts[0] ?? 50;
+
+        $sentimentScore = is_numeric($scoreRaw) ? (int)$scoreRaw : 50;
 
         $post = Post::create([
             'user_id' => auth()->id(),
-            'content' => $request->content,
+            'content' => $content,
+            'sentiment_score' => $sentimentScore,
         ]);
 
         return response()->json($post);
