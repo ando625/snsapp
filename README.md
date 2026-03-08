@@ -43,6 +43,11 @@
 
 ---
 
+## 機能要件、テーブル仕様書、基本設計はこちらから
+- https://docs.google.com/spreadsheets/d/1bPW1i7fDpJEod6UAV_DA4im0AejUD5gZ5z-DvwrmjuA/edit?usp=sharing 
+
+---
+
 ## 使用技術
 
 - Next.js 14+ (App Router)
