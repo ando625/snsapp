@@ -146,7 +146,7 @@ export default function RootLayout({
                                 {/* 通知ドロップダウンメニュー */}
                                 {isNotificationOpen && (
                                     <div
-                                        className="fixed top-16 right-2 sm:right-0 sm:absolute sm:right-0 w-[90vw]   sm:w-80 max-w-[340px] bg-white border border-zinc-200 rounded-xl shadow-xl z-50 overflow-hidden"
+                                        className="fixed top-16 right-2 sm:right-0git sm:absolute sm:right-0 w-[90vw]   sm:w-80 max-w-[340px] bg-white border border-zinc-200 rounded-xl shadow-xl z-50 overflow-hidden"
                                     >
                                         <div className="p-3 border-b border-zinc-100 font-bold text-sm text-zinc-700 bg-zinc-50">
                                             通知

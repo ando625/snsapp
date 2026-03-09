@@ -17,14 +17,14 @@ services:
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini
 
   next:
-    image: node:20 # 魔法の杖（Node.js）の最新版
-    tty: true # コンテナを落とさないための呪文
+    image: node:20
+    tty: true # コンテナを落とさないため
     volumes:
       - ./next:/app
     working_dir: /app
     ports:
-      - "3000:3000" # Next.jsは3000番で開きます
-    command: npm run dev # 起動時に自動で開発サーバーを動かす命令
+      - "3000:3000" # Next.jsは3000番で開く
+    command: sh -c "if [ ! -d 'node_modules' ]; then npm install; fi && npm run dev"
     environment:
       - WATCHPACK_POLLING=true
 
