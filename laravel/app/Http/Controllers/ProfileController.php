@@ -11,11 +11,7 @@ class ProfileController extends Controller
     {
         $profile = Profile::where('user_id', auth()->id())->first();
 
-        $path = $profile ? $profile->profile_image : null;
-
-        if ($request->hasFile('profile_image')) {
-            $path = $request->file('profile_image')->store('profiles', 'public');
-        }
+        $path = $request->hasFile('profile_image') ? $request->file('profile_image')->store('profiles','public') : ($profile->profile_image ?? null);
 
         $newProfile = Profile::updateOrCreate(
             ['user_id' => auth()->id()],
@@ -27,4 +23,5 @@ class ProfileController extends Controller
 
         return response()->json($newProfile);
     }
+
 }
