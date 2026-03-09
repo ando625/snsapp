@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\Notification;
 use App\Http\Requests\CommentRequest;
 
 
@@ -32,9 +33,21 @@ class CommentController extends Controller
             'body' => $request->body,
         ]);
 
-        $comment->load('user.profile');
+        //投稿者に通知を送る処理 自分の投稿にコメントした場合は通知しないように
+        $post = $comment->post;
 
-        return response()->json($comment);
+        if($post->user_id !== auth()->id()){
+            Notification::create([
+                'user_id' => $post->user_id,
+                'notified_by' => auth()->id(),
+                'post_id' => $post->id,
+                'type' =>'comment',
+                'is_read' => false,
+            ]);
+
+        }
+
+        return response()->json($comment->load('user.profile'));
 
     }
 

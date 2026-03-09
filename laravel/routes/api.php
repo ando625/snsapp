@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\LikeController;
-
-
-
+use App\Http\Controllers\NotificationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user()->load('profile');
@@ -41,6 +39,12 @@ Route::middleware('auth:sanctum')->group(function(){
 
     // いいね削除追加
     Route::post('/posts/{post}/like', [LikeController::class,'toggle']);
-});
 
-Route::get('/python-test', [App\Http\Controllers\PythonTestController::class, 'test']);
+    // 自分宛の通知を新しい順に取得
+    Route::get('/notifications', [NotificationController::class, 'index']);
+
+    // 通知を既読に
+    Route::patch('/notifications/{notification}/read', [NotificationController::class,'markAsRead']);
+
+
+});

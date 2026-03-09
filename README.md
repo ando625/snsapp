@@ -37,9 +37,13 @@
 感情スコアはデータベースに保存されるため、リロードしても点数が変わることはありません。また、古い投稿がリロードのたびに光らないよう、投稿時間と現在時刻を比較して演出の有無を制御するロジックを組み込んでいます。
 
 
+7. リアルタイム通知機能
+自分の投稿にたいてアクション（コメント・いいね）があった際、画面上部の鈴マークに通知が届きます。
+- 未読バッジ：新しい通知がある時は赤いバッジで件数を表示し、視覚的に知らせます。
+- クイックプレビュー：鈴マークをクリックすると、誰がいつ反応したかを一覧で確認できるドロップダウンメニューが表示されます。
+- ダイレクトジャンプ：通知をクリックすると該当する投稿位置まで自動的にスクロール（アンカーリンク）し、即座に内容を確認でます。
 
-> **技術的な工夫点：**
-> プログラミング初学者として、ただ機能を実装するだけでなく「ロジック」を重視しました。特に、Docker環境内でPHPからPythonを呼び出す際の文字コード問題や、Reactの`useEffect`と`useState`を使った「時間経過による演出の切り替え」にこだわり、ユーザーがしつこさを感じない快適な操作感（UX）を追求しました。
+
 
 ---
 
@@ -125,6 +129,19 @@
 | updated_at | timestamp | 更新日時 |
 ※ `user_id` と `post_id` の組み合わせはユニーク。
 
+
+6. notifications テーブル
+ユーザーへの通知履歴を管理します。
+| カラム名 | 型 | 詳細 |
+| :--- | :--- | :--- |
+| id | unsigned bigint | プライマリキー |
+| user_id | unsigned bigint | 通知を受け取るユーザー(id) 外部キー |
+| notified_by | unsigned bigint | アクションを起こしたユーザー(id) 外部キー |
+| post_id | unsigned bigint | 対象の投稿(id) 外部キー |
+| type | string | 通知の種類（comment, like） |
+| is_read | boolean | 既読フラグ（デフォルト: false） |
+| created_at | timestamp | 作成日時 |
+| updated_at | timestamp | 更新日時 |
 ---
 
 
@@ -139,7 +156,7 @@
 
 
 
-#### ## セットアップ方法
+## セットアップ方法
 
 このプロジェクトをローカル環境で起動するための手順です。
 
@@ -156,16 +173,26 @@ docker compose up -d --build
 
 ```
 
+3. snsappで実行
+
+```
+npm install
+```
+エラーが出た場合はこちらで
+```
+npm install --legacy-peer-deps
+```
 
 
-3. プロジェクトのルートphp上で実行
+
+4. プロジェクトのルートphp上で実行
 ```
 docker compose exec php bash
 ```
 
 
 
-4. **環境設定ファイルの準備**
+5. **環境設定ファイルの準備**
 ```bash
 cp .env.example .env
 
@@ -183,22 +210,16 @@ DB_PASSWORD=laravel_pass
 ```
 
 
-5. **ライブラリのインストール (PHP & JavaScript)**
+6. **ライブラリのインストール (PHP & JavaScript)**
 
 ```bash
 composer install
 ```
 
-```
-npm install
-```
-エラーが出た場合はこちらで
-```
-npm install --legacy-peer-deps
-```
 
 
-6. **アプリケーションキーの生成とデータベース、シンボリックリンクの準備**
+
+7. **アプリケーションキーの生成とデータベース、シンボリックリンクの準備**
 ```bash
 php artisan key:generate
 php artisan migrate:fresh --seed
