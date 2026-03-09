@@ -9,14 +9,22 @@ class ProfileController extends Controller
 {
     public function store(Request $request)
     {
-        $path = $request->file('profile_image')->store('profiles','public');
+        $profile = Profile::where('user_id', auth()->id())->first();
 
-        $profile = Profile::create([
-            'user_id' => auth()->id(),
-            'nickname' => $request->nickname,
-            'profile_image' => $path,
-        ]);
+        $path = $profile ? $profile->profile_image : null;
 
-        return response()->json($profile);
+        if ($request->hasFile('profile_image')) {
+            $path = $request->file('profile_image')->store('profiles', 'public');
+        }
+
+        $newProfile = Profile::updateOrCreate(
+            ['user_id' => auth()->id()], // 誰のデータか探して
+            [
+                'nickname' => $request->nickname,
+                'profile_image' => $path, // 新しい画像があればそれ、なければキープした画像
+            ]
+        );
+
+        return response()->json($newProfile);
     }
 }

@@ -15,6 +15,7 @@ class PostController extends Controller
             ->withExists(['likes as liked' => function ($query){
                 $query->where('user_id', auth()->id());
             }])
+            ->with('user.profile')
             ->latest()
             ->get();
 
@@ -54,6 +55,7 @@ class PostController extends Controller
 
         // 余計なエラー出力を混ぜないようにシンプルに呼び出す
         $command = "python3 $scriptPath " . escapeshellarg($content);
+    
         $output = shell_exec($command);
 
         // 改行や空白でバラバラにして、最初の数字だけを取り出す

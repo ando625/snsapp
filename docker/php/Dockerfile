@@ -11,7 +11,8 @@ RUN apt update && apt install -y \
     libpng-dev \
     unzip \
     curl \
-    gnupg
+    gnupg \
+    python3
 
 # PHPの拡張機能（gd を追加！）
 # これでプロフィール画像などの加工ができるようになります

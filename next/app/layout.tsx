@@ -6,7 +6,6 @@ import "./globals.css";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 
-
 export interface User {
     id: number;
     name: string;
@@ -25,17 +24,16 @@ export type Notification = {
     user_id: number;
     type: string;
     is_read: boolean;
-    
-}
+};
 
-
-export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
-    
+export default function RootLayout({
+    children,
+}: Readonly<{ children: React.ReactNode }>) {
     const router = useRouter();
     const pathname = usePathname();
     const [user, setUser] = useState<User | null>(null);
     const [notifications, setNotifications] = useState<Notification[]>([]);
-    const[isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
     //通知データを取ってくる関数
     const fetchNotifications = async () => {
@@ -56,25 +54,23 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     }, [user]);
 
     // 未読の数を数える
-    const unreadCount = notifications.filter(n => !n.is_read).length;
-
+    const unreadCount = notifications.filter((n) => !n.is_read).length;
 
     //通知をクリックした時に既読にする処理＆その投稿にジャンプする処理
     const handleNotificationClick = async (id: number, postId: number) => {
         try {
             //既読処理
             await axios.patch(`/api/notifications/${id}/read`);
-            setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
+            setNotifications((prev) =>
+                prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
+            );
 
             setIsNotificationOpen(false);
             router.push(`/dashboard#post-${postId}`);
-
-
         } catch (error) {
             console.error("既読処理に失敗", error);
         }
     };
-
 
     // ログアウト表示のためユーザー取得
     useEffect(() => {
@@ -89,7 +85,6 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
         fetchUser();
     }, []);
 
-
     //ログアウト
     const handleLogout = async () => {
         try {
@@ -101,7 +96,6 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
             console.error("ログアウト失敗", error);
         }
     };
-
 
     return (
         <html lang="ja">
@@ -151,7 +145,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
 
                                 {/* 通知ドロップダウンメニュー */}
                                 {isNotificationOpen && (
-                                    <div className="absolute top-12 right-0 w-80 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                                    <div
+                                        className="fixed top-16 right-2 sm:right-0 sm:absolute sm:right-0 w-[90vw]   sm:w-80 max-w-[340px] bg-white border border-zinc-200 rounded-xl shadow-xl z-50 overflow-hidden"
+                                    >
                                         <div className="p-3 border-b border-zinc-100 font-bold text-sm text-zinc-700 bg-zinc-50">
                                             通知
                                         </div>
@@ -166,7 +162,8 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                                                         key={n.id}
                                                         onClick={() =>
                                                             handleNotificationClick(
-                                                                n.id, n.post_id
+                                                                n.id,
+                                                                n.post_id,
                                                             )
                                                         }
                                                         className={`p-4 border-b border-zinc-50 flex gap-3 items-start hover:bg-indigo-50 transition cursor-pointer ${!n.is_read ? "bg-indigo-50/30" : ""}`}
@@ -189,7 +186,12 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                                                                         ?.nickname ||
                                                                         "誰か"}
                                                                 </span>{" "}
-                                                                さんがあなたの投稿に{n.type === 'comment' ? 'コメントしました':'いいねしました'}。
+                                                                さんがあなたの投稿に
+                                                                {n.type ===
+                                                                "comment"
+                                                                    ? "コメントしました"
+                                                                    : "いいねしました"}
+                                                                。
                                                             </p>
                                                             <p className="text-[10px] text-zinc-400 mt-1">
                                                                 {new Date(

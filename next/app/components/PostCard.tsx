@@ -30,18 +30,16 @@ export default function PostCard({
     const [isCommentOpen, setIsCommentOpen] = useState(false);
     const [liked, setLiked] = useState(isLiked); //自分がいいねしてるか
     const [likeCount, setLikeCount] = useState(initialLikeCount);
-    const [isAnimating, setIsAnimating] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(true);
 
     const [isMagicActive, setIsMagicActive] = useState(() => {
-        const postTime = new Date(createdAt).getTime(); // 投稿された時間
-        const now = new Date().getTime(); // 今の時間
-        const diffSeconds = (now - postTime) / 1000;
-
-        return diffSeconds < 3;
+        const postTime = new Date(createdAt).getTime();
+        const now = new Date().getTime();
+        const diff = (now - postTime) / 1000; // 秒数に変換
+        return diff < 3; // 3秒以内に投稿されたなら true
     });
-    //pythonのきらきら設定時間
+
     useEffect(() => {
-        // もしキラキラモードがONなら、3秒後にOFFにする
         if (isMagicActive) {
             const timer = setTimeout(() => {
                 setIsMagicActive(false);
@@ -50,11 +48,14 @@ export default function PostCard({
         }
     }, [isMagicActive]);
 
-    //Pythonからのスコアを受け取って枠の色を決めるポジティブとネガティブの
+
+    
+    const score = Number(sentimentScore);
+
     const cardStyle =
-        isMagicActive && sentimentScore > 70
+        isMagicActive && score > 55 // 🌟 50点（普通）より少し高ければポジティブ！
             ? "border-yellow-400 bg-yellow-50/80 shadow-yellow-100"
-            : isMagicActive && sentimentScore < 30
+            : isMagicActive && score < 45 // 🌟 50点より少し低ければネガティブ！
               ? "border-blue-300 bg-blue-50/80 shadow-blue-100"
               : "border-zinc-100 bg-white/70";
 
@@ -92,12 +93,12 @@ export default function PostCard({
         >
             {/* 感情に合わせたメッセージを表示 */}
             <div className="flex items-center gap-2 mb-1">
-                {isMagicActive && sentimentScore > 70 && (
+                {isMagicActive && score > 55 && (
                     <span className="text-[12px] font-bold text-yellow-600 animate-bounce">
                         ☀️ 素敵な時間でしたね、いいね！
                     </span>
                 )}
-                {isMagicActive && sentimentScore < 30 && (
+                {isMagicActive && score < 45 && (
                     <span className="text-[12px] font-bold text-blue-600">
                         ☁️ 大丈夫、ゆっくり休んでね。
                     </span>
