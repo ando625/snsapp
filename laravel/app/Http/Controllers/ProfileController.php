@@ -18,10 +18,10 @@ class ProfileController extends Controller
         }
 
         $newProfile = Profile::updateOrCreate(
-            ['user_id' => auth()->id()], // 誰のデータか探して
+            ['user_id' => auth()->id()],
             [
                 'nickname' => $request->nickname,
-                'profile_image' => $path, // 新しい画像があればそれ、なければキープした画像
+                'profile_image' => $path,
             ]
         );
 
