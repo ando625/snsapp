@@ -243,8 +243,8 @@ docker compose up -d --build
 3. snsappからフロントエンドnextで実行
 ```
 snsapp
-├──  Laravel(backend)
-└──  Next(frontend) ← ココ
+├──  laravel(backend)
+└──  next(frontend) ← ココ
 ```
 
 ```
