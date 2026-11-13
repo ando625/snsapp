@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'universal' => [
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+            \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
         ]
     ]);
     })
